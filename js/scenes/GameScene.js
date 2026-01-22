@@ -556,11 +556,8 @@ class GameScene extends Phaser.Scene {
     if (this.hudScoreEl) {
       const meters = Math.floor(this.metersRun);
       // Format as 6-digit number with leading zeros (e.g., "001071")
-      this.hudScoreEl.textContent =
-      `${String(meters)} m`;
-    
-
-    }
+      this.hudScoreEl.textContent = `Distance traveled so far: ${meters}m`;
+}
     if (this.hudJumpsEl) {
       // Format as 3-digit number with leading zeros (e.g., "000", "001", "010")
       this.hudJumpsEl.textContent = String(this.extraJumps).padStart(3, "0");

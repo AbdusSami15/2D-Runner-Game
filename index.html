@@ -49,6 +49,16 @@
           <p class="instructions-small">
             Crossing 4 enemies grants a double jump!
           </p>
+          <div class="theme-picker" aria-label="Theme Picker">
+            <div class="theme-picker-title">Theme</div>
+            <div class="theme-row">
+              <button type="button" class="theme-chip is-active" data-theme="ui-neon">Neon</button>
+              <button type="button" class="theme-chip" data-theme="ui-desert">Desert</button>
+              <button type="button" class="theme-chip" data-theme="ui-forest">Forest</button>
+            </div>
+          </div>
+
+          
           <button id="start-btn" class="btn btn-primary">START</button>
           <div id="high-score-menu" class="high-score"></div>
         </div>
@@ -75,6 +85,42 @@
         </div>
       </div>
     </div>
+
+    
+    <script>
+      (function(){
+        const container = document.getElementById("game-container");
+        if(!container) return;
+
+        const THEME_KEY = "endlessRunnerUiTheme";
+        const themes = ["ui-neon","ui-desert","ui-forest"];
+
+        function apply(theme){
+          if(!themes.includes(theme)) theme = "ui-neon";
+          themes.forEach(t => container.classList.remove(t));
+          container.classList.add(theme);
+          localStorage.setItem(THEME_KEY, theme);
+
+          // update chips
+          document.querySelectorAll(".theme-chip").forEach(btn=>{
+            btn.classList.toggle("is-active", btn.dataset.theme === theme);
+          });
+        }
+
+        window.__applyUiTheme = apply;
+
+        // apply saved theme
+        apply(localStorage.getItem(THEME_KEY) || "ui-neon");
+
+        // click handlers
+        document.addEventListener("click", (e)=>{
+          const btn = e.target && e.target.closest && e.target.closest(".theme-chip");
+          if(!btn) return;
+          apply(btn.dataset.theme);
+        });
+      })();
+    </script>
+
 
     <!-- Phaser 3 CDN -->
     <script src="https://cdn.jsdelivr.net/npm/phaser@3.80.1/dist/phaser.min.js"></script>

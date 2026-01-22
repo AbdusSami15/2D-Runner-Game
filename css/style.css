@@ -644,3 +644,430 @@ right: -10px;
   justify-content: center;
 
 }
+
+/* =========================
+   UI THEMES (Neon/Desert/Forest)
+   Paste at END of style.css
+   ========================= */
+
+#game-container{
+  --ui-font: Arial, system-ui, sans-serif;
+
+  --ui-glass: rgba(8, 10, 18, 0.55);
+  --ui-glass-strong: rgba(8, 10, 18, 0.78);
+  --ui-stroke: rgba(255,255,255,0.14);
+  --ui-shadow: 0 18px 40px rgba(0,0,0,0.45);
+
+  --ui-text: #F6FAFF;
+  --ui-muted: rgba(246,250,255,0.72);
+
+  --ui-accent: #7C5CFF;
+  --ui-accent2: #23D5FF;
+
+  --ui-good: #2EE59D;
+  --ui-warn: #FFC857;
+  --ui-danger: #FF5C7A;
+
+  --ui-pad: 12px;
+  --ui-radius: 18px;
+}
+
+/* Theme backgrounds */
+#game-container.ui-neon{
+  --ui-accent: #7C5CFF;
+  --ui-accent2: #23D5FF;
+  --ui-glass: rgba(7, 8, 18, 0.55);
+  --ui-glass-strong: rgba(7, 8, 18, 0.78);
+  background:
+    radial-gradient(1200px 700px at 50% 0%, rgba(124,92,255,0.28), transparent 62%),
+    radial-gradient(900px 600px at 85% 20%, rgba(35,213,255,0.20), transparent 55%),
+    linear-gradient(180deg, #050818, #0B1430);
+}
+
+#game-container.ui-desert{
+  --ui-accent: #FF8A3D;
+  --ui-accent2: #FFD36B;
+  --ui-good: #27D8A3;
+  --ui-glass: rgba(22, 14, 8, 0.55);
+  --ui-glass-strong: rgba(22, 14, 8, 0.78);
+  background:
+    radial-gradient(1100px 650px at 30% 0%, rgba(255,138,61,0.22), transparent 60%),
+    radial-gradient(900px 620px at 80% 15%, rgba(255,211,107,0.18), transparent 58%),
+    linear-gradient(180deg, #0F0A05, #1B1208);
+}
+
+#game-container.ui-forest{
+  --ui-accent: #38D27E;
+  --ui-accent2: #7AF0FF;
+  --ui-warn: #FFD36B;
+  --ui-glass: rgba(6, 14, 10, 0.55);
+  --ui-glass-strong: rgba(6, 14, 10, 0.78);
+  background:
+    radial-gradient(1100px 650px at 45% 0%, rgba(56,210,126,0.20), transparent 62%),
+    radial-gradient(900px 620px at 80% 25%, rgba(122,240,255,0.16), transparent 58%),
+    linear-gradient(180deg, #04110B, #072016);
+}
+
+/* HUD base */
+#game-container .hud{
+  position:absolute;
+  inset:0;
+  z-index:2000;
+  pointer-events:none;
+  font-family: var(--ui-font);
+  font-weight: 900;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: geometricPrecision;
+}
+
+/* Jump power */
+#game-container .jump-power{
+  position:absolute;
+  top: calc(var(--ui-pad) + env(safe-area-inset-top));
+  left: calc(var(--ui-pad) + env(safe-area-inset-left));
+}
+#game-container .jump-core{
+  position:relative;
+  display:flex;
+  align-items:center;
+  gap:10px;
+  padding:10px;
+  border-radius: var(--ui-radius);
+  background: var(--ui-glass);
+  border: 1px solid var(--ui-stroke);
+  box-shadow: var(--ui-shadow);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+#game-container .jump-tile{
+  width:44px;
+  height:44px;
+  border-radius: 16px;
+  background: linear-gradient(135deg, rgba(255,255,255,0.10), rgba(255,255,255,0.04));
+  border: 1px solid rgba(255,255,255,0.14);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+#game-container.ui-neon .jump-tile{
+  background: linear-gradient(135deg, rgba(124,92,255,0.38), rgba(35,213,255,0.16));
+}
+#game-container.ui-desert .jump-tile{
+  background: linear-gradient(135deg, rgba(255,138,61,0.32), rgba(255,211,107,0.14));
+}
+#game-container.ui-forest .jump-tile{
+  background: linear-gradient(135deg, rgba(56,210,126,0.26), rgba(122,240,255,0.12));
+}
+#game-container .jump-tile-icon{
+  width:22px;
+  height:22px;
+  filter: drop-shadow(0 4px 7px rgba(0,0,0,0.45));
+}
+#game-container .jump-bar{
+  margin-left: 0;
+  width: 150px;
+  height: 12px;
+  border-radius: 999px;
+  background: rgba(255,255,255,0.10);
+  border: 1px solid rgba(255,255,255,0.14);
+  overflow:hidden;
+}
+#game-container #jump-bar-fill{
+  height:100%;
+  width:0%;
+  border-radius:999px;
+  background: linear-gradient(90deg, var(--ui-good), var(--ui-warn), var(--ui-danger));
+  transition: width 0.18s ease;
+}
+#game-container .jump-count{
+  position:absolute;
+  right: -9px;
+  top: -9px;
+  min-width: 28px;
+  height: 28px;
+  padding: 0 10px;
+  border-radius: 999px;
+  background: rgba(246,250,255,0.92);
+  color:#0B1020;
+  font-size: 12px;
+  font-weight: 900;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  box-shadow: 0 14px 26px rgba(0,0,0,0.35);
+}
+
+/* Score */
+#game-container .hud-score{
+  position:absolute;
+  top: calc(var(--ui-pad) + env(safe-area-inset-top));
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 10px 16px;
+  border-radius: var(--ui-radius);
+  background: var(--ui-glass);
+  border: 1px solid var(--ui-stroke);
+  box-shadow: var(--ui-shadow);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+#game-container .hud-value{
+  font-size: 18px;
+  letter-spacing: 1.2px;
+  color: var(--ui-text);
+  text-shadow: 0 10px 22px rgba(0,0,0,0.45);
+}
+
+/* Pause button */
+#game-container .pause-btn{
+  background: var(--ui-glass-strong);
+  border: 1px solid var(--ui-stroke);
+  box-shadow: var(--ui-shadow);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+/* Overlays */
+#game-container .overlay{
+  background:
+    radial-gradient(900px 600px at 50% 25%, rgba(255,255,255,0.10), transparent 60%),
+    rgba(0,0,0,0.62);
+}
+#game-container.ui-neon .overlay{
+  background: radial-gradient(900px 600px at 50% 25%, rgba(124,92,255,0.20), transparent 60%), rgba(0,0,0,0.64);
+}
+#game-container.ui-desert .overlay{
+  background: radial-gradient(900px 600px at 50% 25%, rgba(255,138,61,0.18), transparent 60%), rgba(0,0,0,0.64);
+}
+#game-container.ui-forest .overlay{
+  background: radial-gradient(900px 600px at 50% 25%, rgba(56,210,126,0.18), transparent 60%), rgba(0,0,0,0.64);
+}
+
+#game-container .menu-content,
+#game-container .gameover-content,
+#game-container .pause-content{
+  max-width: 560px;
+  margin: 0 auto;
+  padding: 22px 18px;
+  border-radius: 22px;
+  background: var(--ui-glass-strong);
+  border: 1px solid var(--ui-stroke);
+  box-shadow: var(--ui-shadow);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+}
+
+/* Titles */
+#game-container .game-title,
+#game-container .game-over-title,
+#game-container .pause-title{
+  color: var(--ui-text);
+  text-shadow: 0 14px 30px rgba(0,0,0,0.55);
+  letter-spacing: 0.5px;
+}
+#game-container .instructions{
+  color: var(--ui-muted);
+}
+#game-container .instructions-small{
+  color: rgba(255,255,255,0.85);
+}
+#game-container.ui-neon .instructions-small{ color: rgba(35,213,255,0.92); }
+#game-container.ui-desert .instructions-small{ color: rgba(255,211,107,0.95); }
+#game-container.ui-forest .instructions-small{ color: rgba(122,240,255,0.95); }
+
+/* Buttons */
+#game-container .btn{
+  border-radius: 16px;
+  border: 1px solid rgba(255,255,255,0.14);
+  box-shadow: 0 12px 24px rgba(0,0,0,0.35);
+}
+#game-container .btn-primary{
+  background: linear-gradient(135deg, var(--ui-accent), var(--ui-accent2));
+}
+#game-container .btn-secondary{
+  background: linear-gradient(135deg, rgba(255,255,255,0.18), rgba(255,255,255,0.08));
+}
+
+/* Theme picker */
+#game-container .theme-picker{
+  margin: 16px 0 14px;
+  padding: 12px;
+  border-radius: 18px;
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.10);
+}
+#game-container .theme-picker-title{
+  font-size: 12px;
+  letter-spacing: 2px;
+  color: var(--ui-muted);
+  margin-bottom: 10px;
+}
+#game-container .theme-row{
+  display:flex;
+  gap:10px;
+  justify-content:center;
+  flex-wrap:wrap;
+}
+#game-container .theme-chip{
+  pointer-events:auto;
+  cursor:pointer;
+  padding: 10px 12px;
+  border-radius: 999px;
+  font-weight: 900;
+  color: var(--ui-text);
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.12);
+  box-shadow: 0 10px 20px rgba(0,0,0,0.25);
+}
+#game-container .theme-chip.is-active{
+  background: linear-gradient(135deg, var(--ui-accent), var(--ui-accent2));
+  border-color: rgba(255,255,255,0.18);
+}
+
+/* Countdown */
+#game-container .countdown-display{
+  color: var(--ui-good);
+  text-shadow: 0 0 26px rgba(46,229,157,0.45);
+  font-weight: 900;
+}
+
+/* Mobile scaling */
+@media (max-width: 768px){
+  #game-container{ --ui-pad: 10px; }
+  #game-container .jump-bar{ width: 130px; }
+  #game-container .hud-value{ font-size: 16px; }
+}
+@media (max-width: 480px){
+  #game-container .jump-bar{ width: 118px; }
+  #game-container .menu-content,
+  #game-container .gameover-content,
+  #game-container .pause-content{ max-width: 92vw; }
+}
+
+
+/* =========================================
+   HUD PATCH: Jump badge alignment + bigger UI
+   (Safe override – does not affect mechanics)
+   ========================================= */
+
+/* Anchor for absolute badge */
+#game-container .jump-core{
+  position: relative;
+}
+
+/* x0 badge alignment (centered) */
+#game-container .jump-count{
+  position: absolute !important;
+  top: -12px;
+  right: -12px;
+
+  min-width: 30px;
+  height: 30px;
+  padding: 0 10px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  font-size: 13px;
+  font-weight: 900;
+  line-height: 1;
+
+  border-radius: 999px;
+  background: rgba(246,250,255,0.92);
+  color: #0B1020;
+
+  box-shadow: 0 14px 26px rgba(0,0,0,0.35);
+}
+
+/* Bigger double-jump tile + bar */
+#game-container .jump-core{
+  padding: 14px;
+  gap: 14px;
+}
+
+#game-container .jump-tile{
+  width: 56px;
+  height: 56px;
+  border-radius: 18px;
+}
+
+#game-container .jump-tile-icon{
+  width: 28px;
+  height: 28px;
+}
+
+#game-container .jump-bar{
+  width: 190px;
+  height: 16px;
+  border-radius: 999px;
+}
+
+#game-container #jump-bar-fill{
+  height: 100%;
+}
+
+/* Mobile adjustments */
+@media (max-width: 768px){
+  #game-container .jump-bar{
+    width: 165px;
+    height: 15px;
+  }
+  #game-container .jump-tile{
+    width: 52px;
+    height: 52px;
+  }
+  #game-container .jump-count{
+    top: -10px;
+    right: -10px;
+    min-width: 28px;
+    height: 28px;
+    font-size: 12px;
+  }
+}
+
+@media (max-width: 480px){
+  #game-container .jump-core{
+    padding: 12px;
+    gap: 12px;
+  }
+  #game-container .jump-bar{
+    width: 150px;
+    height: 14px;
+  }
+  #game-container .jump-tile{
+    width: 48px;
+    height: 48px;
+  }
+  #game-container .jump-tile-icon{
+    width: 24px;
+    height: 24px;
+  }
+  #game-container .jump-count{
+    top: -8px;
+    right: -8px;
+    min-width: 26px;
+    height: 26px;
+    font-size: 11px;
+  }
+}
+
+
+/* =========================================
+   HUD PATCH: Distance label sizing (long text)
+   ========================================= */
+#game-container .hud-score{
+  max-width: calc(100vw - 24px);
+}
+#game-container .hud-value{
+  white-space: nowrap;
+  letter-spacing: 0.6px;
+  font-size: 16px;
+}
+@media (max-width: 480px){
+  #game-container .hud-value{
+    font-size: 14px;
+    letter-spacing: 0.4px;
+  }
+}
+
