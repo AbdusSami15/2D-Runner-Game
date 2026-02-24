@@ -1,160 +1,159 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1.0, user-scalable=no"
-    />
-    <title>Endless Runner</title>
-    <link rel="stylesheet" href="css/style.css" />
-    <link rel="icon" type="image/png" href="assets/images/Enemies/saw_a.png" />
-  </head>
-  <body>
-    <div id="game-container">
-      <button id="pauseBtn" class="pause-btn hidden" aria-label="Pause Game">
-        ⏸
-      </button>
-      <!-- HUD (HTML) -->
-      <div id="hud" class="hud">
-        <!-- Jump (top-left) -->
-        <!-- Double Jump Power (Subway Style) -->
-        <div class="jump-power">
-          <div class="jump-core">
-            <div class="jump-tile">
-              <img src="assets/images/Icons/jump.png" class="jump-tile-icon" />
-            </div>
 
-            <div class="jump-bar">
-              <div id="jump-bar-fill"></div>
-            </div>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
+  <title>Endless Runner</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="icon" type="image/png" href="assets/images/Enemies/saw_a.png" />
+</head>
 
-            <!-- count badge (circle-style) -->
-            <div id="jump-count" class="jump-count">x0</div>
-          </div>
+<body>
+  <!-- HUD (HTML) -->
+  <div id="hud" class="hud">
+    <button id="pauseBtn" class="pause-btn hidden" aria-label="Pause Game">
+      ⏸
+    </button>
+    <!-- Jump (top-left) -->
+    <!-- Double Jump Power (Subway Style) -->
+    <div class="jump-power">
+      <div class="jump-core">
+        <div class="jump-tile">
+          <img src="assets/images/Icons/jump.png" class="jump-tile-icon" />
         </div>
 
-        <!-- Score (top-center) -->
-        <div class="hud-score">
-          <!-- <img src="assets/images/Icons/score.png" class="hud-icon"> -->
-          <span id="hud-score" class="hud-value">000000</span>
+        <div class="jump-bar">
+          <div id="jump-bar-fill"></div>
         </div>
-      </div>
 
-      <!-- Menu Screen Overlay -->
-      <div id="menu-overlay" class="overlay hidden">
-        <div class="menu-content">
-          <h1 class="game-title">Endless Runner</h1>
-          <p class="instructions">Tap or Click to Jump!</p>
-          <p class="instructions-small">
-            Crossing 4 enemies grants a double jump!
-          </p>
-          <div class="theme-picker" aria-label="Theme Picker">
-            <div class="theme-picker-title">Theme</div>
-            <div class="theme-row">
-              <button type="button" class="theme-chip is-active" data-theme="ui-neon">Neon</button>
-              <button type="button" class="theme-chip" data-theme="ui-desert">Desert</button>
-              <button type="button" class="theme-chip" data-theme="ui-forest">Forest</button>
-            </div>
-          </div>
-
-          
-          <button id="start-btn" class="btn btn-primary">START</button>
-          <div id="high-score-menu" class="high-score"></div>
-        </div>
-      </div>
-
-      <!-- Loading Overlay -->
-      <div id="loading-overlay" class="overlay">
-        <div class="menu-content">
-          <h1 class="game-title">Loading...</h1>
-          <div class="loading-bar-container">
-            <div id="loading-bar-fill"></div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Game Over Screen Overlay -->
-      <div id="gameover-overlay" class="overlay hidden">
-        <div class="gameover-content">
-          <h2 class="game-over-title">Game Over!</h2>
-          <div id="final-score" class="score-display">Score: 0</div>
-          <div id="high-score-display" class="high-score"></div>
-          <button id="restart-btn" class="btn btn-primary">RESTART</button>
-          <button id="menu-btn" class="btn btn-secondary">MENU</button>
-        </div>
-      </div>
-
-      <!-- Pause Screen Overlay -->
-      <div id="pause-overlay" class="overlay hidden">
-        <div class="pause-content">
-          <h2 class="pause-title">PAUSED</h2>
-          <div id="countdown-display" class="countdown-display hidden"></div>
-          <button id="resume-btn" class="btn btn-primary">RESUME</button>
-          <button id="pause-menu-btn" class="btn btn-secondary">MENU</button>
-        </div>
+        <!-- count badge (circle-style) -->
+        <div id="jump-count" class="jump-count">x0</div>
       </div>
     </div>
 
-    
-    <script>
-      (function(){
-        const container = document.getElementById("game-container");
-        if(!container) return;
+    <!-- Score (top-center) -->
+    <div class="hud-score">
+      <!-- <img src="assets/images/Icons/score.png" class="hud-icon"> -->
+      <span id="hud-score" class="hud-value">000000</span>
+    </div>
+  </div>
 
-        const THEME_KEY = "endlessRunnerUiTheme";
-        const themes = ["ui-neon","ui-desert","ui-forest"];
+  <!-- Menu Screen Overlay -->
+  <div id="menu-overlay" class="overlay hidden">
+    <div class="menu-content">
+      <h1 class="game-title">Endless Runner</h1>
+      <p class="instructions">Tap or Click to Jump!</p>
+      <p class="instructions-small">
+        Crossing 4 enemies grants a double jump!
+      </p>
+      <div class="theme-picker" aria-label="Theme Picker">
+        <div class="theme-picker-title">Theme</div>
+        <div class="theme-row">
+          <button type="button" class="theme-chip is-active" data-theme="ui-neon">Neon</button>
+          <button type="button" class="theme-chip" data-theme="ui-desert">Desert</button>
+          <button type="button" class="theme-chip" data-theme="ui-forest">Forest</button>
+        </div>
+      </div>
 
-        function apply(theme){
-          if(!themes.includes(theme)) theme = "ui-neon";
-          themes.forEach(t => container.classList.remove(t));
-          container.classList.add(theme);
-          localStorage.setItem(THEME_KEY, theme);
 
-          // update chips
-          document.querySelectorAll(".theme-chip").forEach(btn=>{
-            btn.classList.toggle("is-active", btn.dataset.theme === theme);
-          });
-        }
+      <button id="start-btn" class="btn btn-primary">START</button>
+      <div id="high-score-menu" class="high-score"></div>
+    </div>
+  </div>
 
-        window.__applyUiTheme = apply;
+  <!-- Loading Overlay -->
+  <div id="loading-overlay" class="overlay">
+    <div class="menu-content">
+      <h1 class="game-title">Loading...</h1>
+      <div class="loading-bar-container">
+        <div id="loading-bar-fill"></div>
+      </div>
+    </div>
+  </div>
 
-        // apply saved theme
-        apply(localStorage.getItem(THEME_KEY) || "ui-neon");
+  <!-- Game Over Screen Overlay -->
+  <div id="gameover-overlay" class="overlay hidden">
+    <div class="gameover-content">
+      <h2 class="game-over-title">Game Over!</h2>
+      <div id="final-score" class="score-display">Score: 0</div>
+      <div id="high-score-display" class="high-score"></div>
+      <button id="restart-btn" class="btn btn-primary">RESTART</button>
+      <button id="menu-btn" class="btn btn-secondary">MENU</button>
+    </div>
+  </div>
 
-        // click handlers
-        document.addEventListener("click", (e)=>{
-          const btn = e.target && e.target.closest && e.target.closest(".theme-chip");
-          if(!btn) return;
-          apply(btn.dataset.theme);
+  <!-- Pause Screen Overlay -->
+  <div id="pause-overlay" class="overlay hidden">
+    <div class="pause-content">
+      <h2 class="pause-title">PAUSED</h2>
+      <div id="countdown-display" class="countdown-display hidden"></div>
+      <button id="resume-btn" class="btn btn-primary">RESUME</button>
+      <button id="pause-menu-btn" class="btn btn-secondary">MENU</button>
+    </div>
+  </div>
+  </div>
+
+
+  <script>
+    (function () {
+      const container = document.getElementById("game-container");
+      if (!container) return;
+
+      const THEME_KEY = "endlessRunnerUiTheme";
+      const themes = ["ui-neon", "ui-desert", "ui-forest"];
+
+      function apply(theme) {
+        if (!themes.includes(theme)) theme = "ui-neon";
+        themes.forEach(t => container.classList.remove(t));
+        container.classList.add(theme);
+        localStorage.setItem(THEME_KEY, theme);
+
+        // update chips
+        document.querySelectorAll(".theme-chip").forEach(btn => {
+          btn.classList.toggle("is-active", btn.dataset.theme === theme);
         });
-      })();
-    </script>
+      }
+
+      window.__applyUiTheme = apply;
+
+      // apply saved theme
+      apply(localStorage.getItem(THEME_KEY) || "ui-neon");
+
+      // click handlers
+      document.addEventListener("click", (e) => {
+        const btn = e.target && e.target.closest && e.target.closest(".theme-chip");
+        if (!btn) return;
+        apply(btn.dataset.theme);
+      });
+    })();
+  </script>
 
 
-    <!-- Phaser 3 CDN -->
-    <script src="https://cdn.jsdelivr.net/npm/phaser@3.80.1/dist/phaser.min.js"></script>
+  <!-- Phaser 3 CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/phaser@3.80.1/dist/phaser.min.js"></script>
 
-    <!-- Game Configuration -->
-    <script src="js/config/gameConfig.js"></script>
+  <!-- Game Configuration -->
+  <script src="js/config/gameConfig.js"></script>
 
-    <!-- Entities -->
-    <script src="js/entities/Player.js"></script>
-    <script src="js/entities/Ground.js"></script>
-    <script src="js/entities/MudFill.js"></script>
-    <!-- Managers -->
-    <script src="js/managers/ParallaxManager.js"></script>
-    <!-- Scenes -->
-    <script src="js/scenes/PreloadScene.js"></script>
-    <script src="js/scenes/MenuScene.js"></script>
-    <script src="js/scenes/GameScene.js"></script>
-    <script src="js/scenes/GameOverScene.js"></script>
-    <script src="js/entities/Enemy.js"></script>
-    <script src="js/managers/EnemyManager.js"></script>
-    <script src="js/managers/PropsManager.js"></script>
-    <script src="js/config/EnemyConfig.js"></script>
+  <!-- Entities -->
+  <script src="js/entities/Player.js"></script>
+  <script src="js/entities/Ground.js"></script>
+  <script src="js/entities/MudFill.js"></script>
+  <!-- Managers -->
+  <script src="js/managers/ParallaxManager.js"></script>
+  <!-- Scenes -->
+  <script src="js/scenes/PreloadScene.js"></script>
+  <script src="js/scenes/MenuScene.js"></script>
+  <script src="js/scenes/GameScene.js"></script>
+  <script src="js/scenes/GameOverScene.js"></script>
+  <script src="js/entities/Enemy.js"></script>
+  <script src="js/managers/EnemyManager.js"></script>
+  <script src="js/managers/PropsManager.js"></script>
+  <script src="js/config/EnemyConfig.js"></script>
 
-    <!-- Main Game File -->
-    <script src="js/main.js"></script>
-  </body>
+  <!-- Main Game File -->
+  <script src="js/main.js"></script>
+</body>
+
 </html>

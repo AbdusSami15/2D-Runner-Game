@@ -3,6 +3,8 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
 }
 
 html,
@@ -12,6 +14,7 @@ body {
   overflow: hidden;
   background-color: #1a1a1a;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  user-select: none;
 }
 
 #game-container {
@@ -81,12 +84,6 @@ canvas {
   padding: var(--ui-pad);
 }
 
-@media (max-width: 480px) {
-  .hud {
-    padding: 8px;
-  }
-}
-
 .hud.hidden {
   display: none !important;
 }
@@ -101,8 +98,8 @@ canvas {
 .jump-core {
   display: flex;
   align-items: center;
-  gap: clamp(8px, 1.5vw, 14px);
-  padding: clamp(8px, 1.5vw, 12px);
+  gap: clamp(6px, 1.5vw, 14px);
+  padding: clamp(6px, 1.5vw, 12px);
   border-radius: var(--ui-radius);
   background: var(--ui-glass);
   border: 1px solid var(--ui-stroke);
@@ -113,8 +110,8 @@ canvas {
 }
 
 .jump-tile {
-  width: clamp(40px, 8vw, 56px);
-  height: clamp(40px, 8vw, 56px);
+  width: clamp(36px, 8.5vw, 56px);
+  height: clamp(36px, 8.5vw, 56px);
   border-radius: 14px;
   background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.04));
   border: 1px solid rgba(255, 255, 255, 0.14);
@@ -130,8 +127,8 @@ canvas {
 }
 
 .jump-bar {
-  width: clamp(100px, 20vw, 190px);
-  height: clamp(10px, 2vw, 16px);
+  width: clamp(80px, 20vw, 190px);
+  height: clamp(8px, 2vw, 16px);
   border-radius: 999px;
   background: rgba(255, 255, 255, 0.1);
   border: 1px solid rgba(255, 255, 255, 0.1);
@@ -150,13 +147,13 @@ canvas {
   position: absolute;
   right: -8px;
   top: -8px;
-  min-width: 26px;
-  height: 26px;
-  padding: 0 8px;
+  min-width: 24px;
+  height: 24px;
+  padding: 0 6px;
   border-radius: 999px;
   background: rgba(246, 250, 255, 0.92);
   color: #0B1020;
-  font-size: 12px;
+  font-size: 11px;
   font-weight: 900;
   display: flex;
   align-items: center;
@@ -170,7 +167,7 @@ canvas {
   top: calc(var(--ui-pad) + env(safe-area-inset-top));
   left: 50%;
   transform: translateX(-50%);
-  padding: 8px 16px;
+  padding: 6px 14px;
   border-radius: var(--ui-radius);
   background: var(--ui-glass);
   border: 1px solid var(--ui-stroke);
@@ -178,28 +175,37 @@ canvas {
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
   white-space: nowrap;
+  transition: top 0.3s ease, transform 0.3s ease;
 }
 
 .hud-value {
-  font-size: clamp(14px, 3.5vw, 18px);
+  font-size: clamp(13px, 3.5vw, 18px);
   color: var(--ui-text);
-  letter-spacing: 1px;
+  letter-spacing: 0.5px;
   text-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
 }
 
-/* Pause Button */
+/* Narrow Screen HUD Repositioning */
+@media (max-width: 450px) {
+  .hud-score {
+    top: 85px;
+    /* Move below jump bar */
+  }
+}
+
+/* Pause Button (Inside HUD) */
 .pause-btn {
   position: absolute;
   top: var(--ui-pad);
   right: var(--ui-pad);
-  z-index: 10000;
-  width: clamp(40px, 8vw, 50px);
-  height: clamp(40px, 8vw, 50px);
+  z-index: 10;
+  width: clamp(40px, 9vw, 50px);
+  height: clamp(40px, 9vw, 50px);
   border-radius: 50%;
   background: var(--ui-glass-strong);
   border: 1px solid var(--ui-stroke);
   color: white;
-  font-size: clamp(18px, 4vw, 24px);
+  font-size: clamp(18px, 4.5vw, 24px);
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -215,10 +221,6 @@ canvas {
   transform: scale(0.9);
 }
 
-.pause-btn.hidden {
-  display: none !important;
-}
-
 /* Overlays */
 .overlay {
   position: absolute;
@@ -228,11 +230,7 @@ canvas {
   justify-content: center;
   align-items: center;
   background: rgba(0, 0, 0, 0.6);
-  padding: 20px;
-}
-
-.overlay.hidden {
-  display: none !important;
+  padding: 10px;
 }
 
 .menu-content,
@@ -240,7 +238,9 @@ canvas {
 .pause-content {
   width: 100%;
   max-width: 500px;
-  padding: clamp(20px, 5vw, 40px);
+  max-height: 90vh;
+  /* Prevent vertical overflow */
+  padding: clamp(16px, 5vw, 40px);
   border-radius: 24px;
   background: var(--ui-glass-strong);
   border: 1px solid var(--ui-stroke);
@@ -249,58 +249,67 @@ canvas {
   -webkit-backdrop-filter: blur(16px);
   text-align: center;
   color: var(--ui-text);
+  overflow-y: auto;
+  /* Scrollable if content too long */
+}
+
+/* Hide scrollbar for aesthetics but keep functionality */
+.menu-content::-webkit-scrollbar,
+.gameover-content::-webkit-scrollbar,
+.pause-content::-webkit-scrollbar {
+  display: none;
 }
 
 /* Overlay Elements */
 .game-title,
 .game-over-title,
 .pause-title {
-  font-size: clamp(32px, 8vw, 48px);
-  margin-bottom: 20px;
+  font-size: clamp(28px, 8vw, 48px);
+  margin-bottom: 16px;
   text-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
 }
 
 .instructions {
-  font-size: clamp(16px, 4vw, 20px);
+  font-size: clamp(15px, 4vw, 20px);
   color: var(--ui-muted);
-  margin-bottom: 10px;
+  margin-bottom: 8px;
 }
 
 .instructions-small {
-  font-size: clamp(14px, 3.5vw, 16px);
+  font-size: clamp(13px, 3.5vw, 16px);
   opacity: 0.8;
-  margin-bottom: 24px;
+  margin-bottom: 20px;
 }
 
 /* Theme Picker */
 .theme-picker {
-  margin: 20px 0;
-  padding: 16px;
+  margin: 16px 0;
+  padding: 12px;
   border-radius: var(--ui-radius);
   background: rgba(255, 255, 255, 0.05);
   border: 1px solid rgba(255, 255, 255, 0.08);
 }
 
 .theme-picker-title {
-  font-size: 11px;
+  font-size: 10px;
   text-transform: uppercase;
   letter-spacing: 2px;
   color: var(--ui-muted);
-  margin-bottom: 12px;
+  margin-bottom: 10px;
 }
 
 .theme-row {
   display: flex;
-  gap: 12px;
+  gap: 10px;
   justify-content: center;
   flex-wrap: wrap;
 }
 
 .theme-chip {
-  padding: 8px 16px;
+  padding: 6px 14px;
   border-radius: 999px;
   font-weight: 700;
-  font-size: 14px;
+  font-size: 13px;
   background: rgba(255, 255, 255, 0.1);
   border: 1px solid rgba(255, 255, 255, 0.1);
   color: var(--ui-text);
@@ -318,11 +327,11 @@ canvas {
   display: block;
   width: 100%;
   max-width: 240px;
-  height: 56px;
-  margin: 12px auto;
+  height: 52px;
+  margin: 10px auto;
   border: none;
   border-radius: 16px;
-  font-size: 20px;
+  font-size: 18px;
   font-weight: 700;
   color: white;
   cursor: pointer;
@@ -341,41 +350,20 @@ canvas {
   border: 1px solid var(--ui-stroke);
 }
 
-.btn:active {
-  transform: scale(0.96);
-}
-
 /* Countdown */
 .countdown-display {
-  font-size: 80px;
+  font-size: clamp(60px, 15vw, 80px);
   font-weight: 900;
   color: var(--ui-good);
   text-shadow: 0 0 32px rgba(46, 229, 157, 0.4);
-  margin: 20px 0;
-}
-
-/* Scores in Screens */
-.score-display,
-.high-score {
-  font-size: clamp(18px, 4vw, 24px);
-  margin: 10px 0;
-  font-weight: 700;
-}
-
-.high-score {
-  color: var(--ui-warn);
-}
-
-/* Utilities */
-.hidden {
-  display: none !important;
+  margin: 16px 0;
 }
 
 /* Loading Bar */
 .loading-bar-container {
   width: 100%;
-  max-width: 300px;
-  height: 20px;
+  max-width: 280px;
+  height: 16px;
   background: rgba(255, 255, 255, 0.1);
   border-radius: 10px;
   margin: 20px auto;
@@ -388,4 +376,9 @@ canvas {
   width: 0%;
   background: linear-gradient(90deg, var(--ui-accent), var(--ui-accent2));
   transition: width 0.3s ease;
+}
+
+/* Utilities */
+.hidden {
+  display: none !important;
 }
