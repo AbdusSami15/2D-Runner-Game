@@ -7,10 +7,13 @@ class GameScene extends Phaser.Scene {
     // HTML HUD refs
     this.hudEl = document.getElementById("hud");
     this.hudScoreEl = document.getElementById("hud-score");
-    this.hudJumpsEl = document.getElementById("hud-jumps");
+    this.jumpCountEl = document.getElementById("jump-count");
+    this.jumpBarFill = document.getElementById("jump-bar-fill");
+    this.pauseBtn = document.getElementById("pauseBtn");
 
-    // show HUD during gameplay
+    // show HUD and pause button during gameplay
     this.hudEl?.classList.remove("hidden");
+    this.pauseBtn?.classList.remove("hidden");
 
     // Double jump progress system
     this.enemiesForDoubleJump = 4;
@@ -184,9 +187,12 @@ class GameScene extends Phaser.Scene {
       const groundWidth = width + extraWidth;
 
       this.ground.setPosition(width / 2, this.groundY);
-      this.ground.displayWidth = groundWidth;
-      this.ground.body.setSize(groundWidth, this.ground.height);
-      this.ground.body.updateFromGameObject();
+      this.ground.width = groundWidth;
+
+      if (this.ground.body) {
+        this.ground.body.setSize(groundWidth, this.ground.height);
+        this.ground.body.updateFromGameObject();
+      }
     }
 
     // 4️⃣ Resize mud - extend width and height on mobile
@@ -194,12 +200,11 @@ class GameScene extends Phaser.Scene {
       const extraWidth = isMobile ? 400 : 0;
       const extraMudHeight = isMobile ? 100 : 0;
       const mudWidth = width + extraWidth;
-      const mudHeight =
-        height - (this.groundY + this.ground.height) + extraMudHeight;
+      const mudHeight = height - (this.groundY + (this.ground?.height || 0)) + extraMudHeight;
 
-      this.mud.setPosition(width / 2, this.groundY + this.ground.height);
-      this.mud.displayWidth = mudWidth;
-      this.mud.displayHeight = mudHeight;
+      this.mud.setPosition(width / 2, this.groundY + (this.ground?.height || 0));
+      this.mud.width = mudWidth;
+      this.mud.height = mudHeight;
     }
 
     // 5️⃣ Snap player

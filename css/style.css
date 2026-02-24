@@ -42,27 +42,30 @@ body {
 
 /* Themes */
 #game-container.ui-neon {
-  --ui-accent: #7C5CFF;
-  --ui-accent2: #23D5FF;
-  background: radial-gradient(1200px 700px at 50% 0%, rgba(124, 92, 255, 0.28), transparent 62%),
-    radial-gradient(900px 600px at 85% 20%, rgba(35, 213, 255, 0.2), transparent 55%),
+  --ui-accent: #00f2ff;
+  --ui-accent2: #7000ff;
+  background: radial-gradient(circle at 50% 0%, rgba(0, 242, 255, 0.2), transparent 75%),
+    radial-gradient(circle at 80% 20%, rgba(112, 0, 255, 0.15), transparent 65%),
     linear-gradient(180deg, #050818, #0B1430);
+  /* Vibrant Dark Blue */
 }
 
 #game-container.ui-desert {
-  --ui-accent: #FF8A3D;
-  --ui-accent2: #FFD36B;
-  background: radial-gradient(1100px 650px at 30% 0%, rgba(255, 138, 61, 0.22), transparent 60%),
-    radial-gradient(900px 620px at 80% 15%, rgba(255, 211, 107, 0.18), transparent 58%),
+  --ui-accent: #ff9d00;
+  --ui-accent2: #ff4800;
+  background: radial-gradient(circle at 30% 0%, rgba(255, 157, 0, 0.2), transparent 75%),
+    radial-gradient(circle at 70% 20%, rgba(255, 72, 0, 0.15), transparent 65%),
     linear-gradient(180deg, #0F0A05, #1B1208);
+  /* Vibrant Dark Earth */
 }
 
 #game-container.ui-forest {
-  --ui-accent: #38D27E;
-  --ui-accent2: #7AF0FF;
-  background: radial-gradient(1100px 650px at 45% 0%, rgba(56, 210, 126, 0.2), transparent 62%),
-    radial-gradient(900px 620px at 80% 25%, rgba(122, 240, 255, 0.16), transparent 58%),
+  --ui-accent: #00ff6a;
+  --ui-accent2: #009dff;
+  background: radial-gradient(circle at 45% 0%, rgba(0, 255, 106, 0.2), transparent 75%),
+    radial-gradient(circle at 85% 25%, rgba(0, 157, 255, 0.15), transparent 65%),
     linear-gradient(180deg, #04110B, #072016);
+  /* Vibrant Dark Forest */
 }
 
 /* Phaser Canvas */
@@ -93,13 +96,15 @@ canvas {
   position: absolute;
   top: calc(var(--ui-pad) + env(safe-area-inset-top));
   left: calc(var(--ui-pad) + env(safe-area-inset-left));
+  pointer-events: auto;
+  /* Allow interaction if needed */
 }
 
 .jump-core {
   display: flex;
   align-items: center;
-  gap: clamp(6px, 1.5vw, 14px);
-  padding: clamp(6px, 1.5vw, 12px);
+  gap: clamp(8px, 2vw, 12px);
+  padding: 8px 12px;
   border-radius: var(--ui-radius);
   background: var(--ui-glass);
   border: 1px solid var(--ui-stroke);
@@ -110,55 +115,61 @@ canvas {
 }
 
 .jump-tile {
-  width: clamp(36px, 8.5vw, 56px);
-  height: clamp(36px, 8.5vw, 56px);
-  border-radius: 14px;
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.04));
-  border: 1px solid rgba(255, 255, 255, 0.14);
+  width: clamp(32px, 8vw, 44px);
+  height: clamp(32px, 8vw, 44px);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.1);
   display: flex;
   align-items: center;
   justify-content: center;
+  flex-shrink: 0;
 }
 
 .jump-tile-icon {
-  width: 60%;
-  height: 60%;
-  filter: drop-shadow(0 4px 7px rgba(0, 0, 0, 0.45));
+  width: 70%;
+  height: 70%;
+  object-fit: contain;
 }
 
 .jump-bar {
-  width: clamp(80px, 20vw, 190px);
-  height: clamp(8px, 2vw, 16px);
-  border-radius: 999px;
-  background: rgba(255, 255, 255, 0.1);
+  width: clamp(60px, 15vw, 120px);
+  height: 12px;
+  border-radius: 6px;
+  background: rgba(0, 0, 0, 0.3);
   border: 1px solid rgba(255, 255, 255, 0.1);
   overflow: hidden;
+  position: relative;
 }
 
 #jump-bar-fill {
+  position: absolute;
+  top: 0;
+  left: 0;
   height: 100%;
   width: 0%;
-  border-radius: 999px;
+  /* JS will update this */
   background: linear-gradient(90deg, var(--ui-good), var(--ui-warn), var(--ui-danger));
-  transition: width 0.2s ease;
+  transition: width 0.3s ease;
 }
 
 .jump-count {
   position: absolute;
-  right: -8px;
-  top: -8px;
-  min-width: 24px;
-  height: 24px;
-  padding: 0 6px;
-  border-radius: 999px;
-  background: rgba(246, 250, 255, 0.92);
-  color: #0B1020;
-  font-size: 11px;
+  right: -5px;
+  top: -5px;
+  min-width: 22px;
+  height: 22px;
+  background: var(--ui-text);
+  color: #000;
+  border-radius: 11px;
+  font-size: 10px;
   font-weight: 900;
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.35);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+  border: 1px solid var(--ui-stroke);
+  z-index: 5;
 }
 
 /* Score UI */
@@ -229,8 +240,10 @@ canvas {
   display: flex;
   justify-content: center;
   align-items: center;
-  background: rgba(0, 0, 0, 0.6);
+  background: rgba(0, 0, 0, 0.75);
   padding: 10px;
+  pointer-events: auto;
+  /* Ensure overlays get interactions */
 }
 
 .menu-content,
@@ -319,7 +332,8 @@ canvas {
 
 .theme-chip.is-active {
   background: linear-gradient(135deg, var(--ui-accent), var(--ui-accent2));
-  border-color: rgba(255, 255, 255, 0.2);
+  border-color: rgba(255, 255, 255, 0.4);
+  box-shadow: 0 0 15px var(--ui-accent);
 }
 
 /* Buttons */
