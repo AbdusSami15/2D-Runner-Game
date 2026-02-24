@@ -28,10 +28,23 @@ class PreloadScene extends Phaser.Scene {
     progressBox.fillRect(width / 2 - 160, height / 2, 320, 50);
 
     // Update progress bar
+    const htmlLoadingBar = document.getElementById("loading-bar-fill");
+
     this.load.on("progress", (value) => {
       progressBar.clear();
       progressBar.fillStyle(0xffffff, 1);
       progressBar.fillRect(width / 2 - 150, height / 2 + 10, 300 * value, 30);
+
+      if (htmlLoadingBar) {
+        htmlLoadingBar.style.width = `${value * 100}%`;
+      }
+    });
+
+    this.load.on("complete", () => {
+      const loadingOverlay = document.getElementById("loading-overlay");
+      if (loadingOverlay) {
+        loadingOverlay.classList.add("hidden");
+      }
     });
 
     // Load assets
@@ -109,13 +122,13 @@ class PreloadScene extends Phaser.Scene {
     this.load.image("saw_a", "assets/images/Enemies/saw_a.png");
     this.load.image("saw_b", "assets/images/Enemies/saw_b.png");
 
-    this.load.image("Slime_Spike_a","assets/images/Enemies/slime_spike_walk_a.png");
-    this.load.image("Slime_Spike_b","assets/images/Enemies/slime_spike_walk_b.png");
+    this.load.image("Slime_Spike_a", "assets/images/Enemies/slime_spike_walk_a.png");
+    this.load.image("Slime_Spike_b", "assets/images/Enemies/slime_spike_walk_b.png");
 
     // Props
     this.load.image("rock", "assets/images/Props/Rock.webp");
     this.load.image("log", "assets/images/Props/Log.png");
-    
+
     // UI Elements
     this.load.image("scorePanel", "assets/images/Score Panel.png");
     this.load.image("meterRunIcon", "assets/images/Icons/meter run icon.png");
@@ -139,45 +152,45 @@ class PreloadScene extends Phaser.Scene {
     });
 
     this.anims.create({
-        key: "slime_normal_walk",
-        frames: [{ key: "slime_normal_walk_a" }, { key: "slime_normal_walk_b" }],
-        frameRate: 10,
-        repeat: -1,
+      key: "slime_normal_walk",
+      frames: [{ key: "slime_normal_walk_a" }, { key: "slime_normal_walk_b" }],
+      frameRate: 10,
+      repeat: -1,
     });
 
     this.anims.create({
-        key: "snail_walk",
-        frames: [{ key: "snail_walk_a" }, { key: "snail_walk_b" }],
-        frameRate: 10,
-        repeat: -1,
+      key: "snail_walk",
+      frames: [{ key: "snail_walk_a" }, { key: "snail_walk_b" }],
+      frameRate: 10,
+      repeat: -1,
     });
 
     this.anims.create({
-        key: "bee_walk",
-        frames: [{ key: "bee_a" }, { key: "bee_b" }],
-        frameRate: 10,
-        repeat: -1,
-    });
-    
-    this.anims.create({
-        key: "fly_walk",
-        frames: [{ key: "fly_a" }, { key: "fly_b" }],
-        frameRate: 10,
-        repeat: -1,
+      key: "bee_walk",
+      frames: [{ key: "bee_a" }, { key: "bee_b" }],
+      frameRate: 10,
+      repeat: -1,
     });
 
     this.anims.create({
-        key: "saw_walk",
-        frames: [{ key: "saw_a" }, { key: "saw_b" }],
-        frameRate: 10,
-        repeat: -1,
+      key: "fly_walk",
+      frames: [{ key: "fly_a" }, { key: "fly_b" }],
+      frameRate: 10,
+      repeat: -1,
     });
 
     this.anims.create({
-        key: "slime_spike_walk",
-        frames: [{ key: "Slime_Spike_a" }, { key: "Slime_Spike_b" }],
-        frameRate: 10,
-        repeat: -1,
+      key: "saw_walk",
+      frames: [{ key: "saw_a" }, { key: "saw_b" }],
+      frameRate: 10,
+      repeat: -1,
+    });
+
+    this.anims.create({
+      key: "slime_spike_walk",
+      frames: [{ key: "Slime_Spike_a" }, { key: "Slime_Spike_b" }],
+      frameRate: 10,
+      repeat: -1,
     });
 
     // Start MenuScene after loading completes

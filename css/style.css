@@ -5,7 +5,8 @@
   box-sizing: border-box;
 }
 
-html, body {
+html,
+body {
   width: 100%;
   height: 100%;
   overflow: hidden;
@@ -18,7 +19,7 @@ html, body {
   width: 100vw;
   height: 100vh;
   background: black;
-  
+
   /* Theme Variables */
   --ui-font: inherit;
   --ui-glass: rgba(8, 10, 18, 0.55);
@@ -41,24 +42,24 @@ html, body {
   --ui-accent: #7C5CFF;
   --ui-accent2: #23D5FF;
   background: radial-gradient(1200px 700px at 50% 0%, rgba(124, 92, 255, 0.28), transparent 62%),
-              radial-gradient(900px 600px at 85% 20%, rgba(35, 213, 255, 0.2), transparent 55%),
-              linear-gradient(180deg, #050818, #0B1430);
+    radial-gradient(900px 600px at 85% 20%, rgba(35, 213, 255, 0.2), transparent 55%),
+    linear-gradient(180deg, #050818, #0B1430);
 }
 
 #game-container.ui-desert {
   --ui-accent: #FF8A3D;
   --ui-accent2: #FFD36B;
   background: radial-gradient(1100px 650px at 30% 0%, rgba(255, 138, 61, 0.22), transparent 60%),
-              radial-gradient(900px 620px at 80% 15%, rgba(255, 211, 107, 0.18), transparent 58%),
-              linear-gradient(180deg, #0F0A05, #1B1208);
+    radial-gradient(900px 620px at 80% 15%, rgba(255, 211, 107, 0.18), transparent 58%),
+    linear-gradient(180deg, #0F0A05, #1B1208);
 }
 
 #game-container.ui-forest {
   --ui-accent: #38D27E;
   --ui-accent2: #7AF0FF;
   background: radial-gradient(1100px 650px at 45% 0%, rgba(56, 210, 126, 0.2), transparent 62%),
-              radial-gradient(900px 620px at 80% 25%, rgba(122, 240, 255, 0.16), transparent 58%),
-              linear-gradient(180deg, #04110B, #072016);
+    radial-gradient(900px 620px at 80% 25%, rgba(122, 240, 255, 0.16), transparent 58%),
+    linear-gradient(180deg, #04110B, #072016);
 }
 
 /* Phaser Canvas */
@@ -78,6 +79,12 @@ canvas {
   font-weight: 700;
   color: var(--ui-text);
   padding: var(--ui-pad);
+}
+
+@media (max-width: 480px) {
+  .hud {
+    padding: 8px;
+  }
 }
 
 .hud.hidden {
@@ -245,7 +252,9 @@ canvas {
 }
 
 /* Overlay Elements */
-.game-title, .game-over-title, .pause-title {
+.game-title,
+.game-over-title,
+.pause-title {
   font-size: clamp(32px, 8vw, 48px);
   margin-bottom: 20px;
   text-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
@@ -346,7 +355,8 @@ canvas {
 }
 
 /* Scores in Screens */
-.score-display, .high-score {
+.score-display,
+.high-score {
   font-size: clamp(18px, 4vw, 24px);
   margin: 10px 0;
   font-weight: 700;
@@ -359,4 +369,23 @@ canvas {
 /* Utilities */
 .hidden {
   display: none !important;
+}
+
+/* Loading Bar */
+.loading-bar-container {
+  width: 100%;
+  max-width: 300px;
+  height: 20px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+  margin: 20px auto;
+  overflow: hidden;
+  border: 1px solid var(--ui-stroke);
+}
+
+#loading-bar-fill {
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, var(--ui-accent), var(--ui-accent2));
+  transition: width 0.3s ease;
 }
