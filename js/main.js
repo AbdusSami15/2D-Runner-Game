@@ -59,11 +59,10 @@ window.addEventListener('orientationchange', () => {
 
 
 function isMobileDevice() {
-  if (navigator.userAgentData) {
-    return navigator.userAgentData.mobile;
-  }
-  return false;
+  const ua = navigator.userAgent;
+  return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(ua);
 }
+
 if (isMobileDevice()) {
   console.log("User is on mobile");
 } else {
@@ -71,66 +70,34 @@ if (isMobileDevice()) {
 }
 
 
-// Helper function to handle fullscreen changes
+// Helper function to handle fullscreen changes and ensure UI visibility
 function handleFullscreenChange() {
   const hud = document.getElementById("hud");
-  const pauseBtn = document.getElementById("pauseBtn");
-  const pauseOverlay = document.getElementById("pause-overlay");
-  const menuOverlay = document.getElementById("menu-overlay");
-  const gameOverOverlay = document.getElementById("gameover-overlay");
+  const overlays = [
+    document.getElementById("menu-overlay"),
+    document.getElementById("gameover-overlay"),
+    document.getElementById("pause-overlay"),
+    document.getElementById("pauseBtn")
+  ];
 
-  const fsElement =
-    document.fullscreenElement ||
-    document.webkitFullscreenElement;
+  const fsElement = document.fullscreenElement || document.webkitFullscreenElement;
+  const container = fsElement || document.getElementById("game-container");
 
-  const container = document.getElementById("game-container");
+  if (!container) return;
 
-  if (fsElement) {
-    // Entering fullscreen → move all UI elements inside fullscreen element
-    if (hud && hud.parentNode !== fsElement) fsElement.appendChild(hud);
-    if (pauseBtn && pauseBtn.parentNode !== fsElement) fsElement.appendChild(pauseBtn);
-    if (pauseOverlay && pauseOverlay.parentNode !== fsElement) fsElement.appendChild(pauseOverlay);
-    if (menuOverlay && menuOverlay.parentNode !== fsElement) fsElement.appendChild(menuOverlay);
-    if (gameOverOverlay && gameOverOverlay.parentNode !== fsElement) fsElement.appendChild(gameOverOverlay);
-  } else {
-    // Exiting fullscreen → move everything back to game container
-    if (hud && container && hud.parentNode !== container) container.appendChild(hud);
-    if (pauseBtn && container && pauseBtn.parentNode !== container) container.appendChild(pauseBtn);
-    if (pauseOverlay && container && pauseOverlay.parentNode !== container) container.appendChild(pauseOverlay);
-    if (menuOverlay && container && menuOverlay.parentNode !== container) container.appendChild(menuOverlay);
-    if (gameOverOverlay && container && gameOverOverlay.parentNode !== container) container.appendChild(gameOverOverlay);
+  if (hud && hud.parentNode !== container) {
+    container.appendChild(hud);
   }
+
+  overlays.forEach(overlay => {
+    if (overlay && overlay.parentNode !== container) {
+      container.appendChild(overlay);
+    }
+  });
 }
 
 document.addEventListener("fullscreenchange", handleFullscreenChange);
 document.addEventListener("webkitfullscreenchange", handleFullscreenChange);
 
-
-function scaleHudFromPixel7() {
-  const hudInner = document.querySelector(".hud-inner");
-  if (!hudInner) return;
-
-  const cssWidth = window.innerWidth;
-  const dpr = window.devicePixelRatio || 1;
-
-  // Pixel 7 reference
-  const PIXEL_7_WIDTH = 412;
-
-  // Base scale relative to Pixel 7
-  let scale = cssWidth / PIXEL_7_WIDTH;
-
-  // Clamp scale so it never breaks UI
-  scale = Math.max(1, Math.min(scale, 2));
-
-  // Boost high-end phones slightly (S21 Ultra etc.)
-  if (dpr >= 3) {
-    scale *= 2.15;
-  }
-
-  hudInner.style.transform = `scale(${scale})`;
-}
-
-// Call it
-scaleHudFromPixel7();
-window.addEventListener("resize", scaleHudFromPixel7);
-document.addEventListener("fullscreenchange", scaleHudFromPixel7);
+// Initial check to ensure UI is in the correct place
+handleFullscreenChange();

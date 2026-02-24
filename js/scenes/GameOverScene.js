@@ -9,29 +9,20 @@ class GameOverScene extends Phaser.Scene {
   }
 
   create() {
-    // Hide menu overlay
-    const menuOverlay = document.getElementById("menu-overlay");
-    if (menuOverlay) {
-      menuOverlay.classList.add("hidden");
-    }
-    
-    // Hide pause overlay if visible
-    const pauseOverlay = document.getElementById("pause-overlay");
-    if (pauseOverlay) {
-      pauseOverlay.classList.add("hidden");
-    }
-    
-    // Hide pause button
-    const pauseBtn = document.getElementById("pauseBtn");
-    if (pauseBtn) {
-      pauseBtn.classList.add("hidden");
-      pauseBtn.style.display = "none";
-    }
-
     // Show game over overlay
     const gameOverOverlay = document.getElementById("gameover-overlay");
     if (gameOverOverlay) {
       gameOverOverlay.classList.remove("hidden");
+    }
+
+    // Hide other overlays
+    document.getElementById("menu-overlay")?.classList.add("hidden");
+    document.getElementById("pause-overlay")?.classList.add("hidden");
+
+    // Hide pause button
+    const pauseBtn = document.getElementById("pauseBtn");
+    if (pauseBtn) {
+      pauseBtn.classList.add("hidden");
     }
 
     // Update score display
@@ -40,7 +31,6 @@ class GameOverScene extends Phaser.Scene {
     // Set up button handlers
     this.setupGameOverButtons();
     document.getElementById("hud")?.classList.add("hidden");
-
   }
 
   updateScoreDisplay() {
@@ -65,9 +55,8 @@ class GameOverScene extends Phaser.Scene {
     const highScoreElement = document.getElementById("high-score-display");
     if (highScoreElement) {
       const displayScore = newHighScore ? this.finalScore : highScore;
-      highScoreElement.textContent = `Best Distance: ${displayScore}m${
-        newHighScore ? " 🎉 NEW!" : ""
-      }`;
+      highScoreElement.textContent = `Best Distance: ${displayScore}m${newHighScore ? " 🎉 NEW!" : ""
+        }`;
       highScoreElement.className = newHighScore
         ? "high-score new"
         : "high-score";
@@ -99,47 +88,9 @@ class GameOverScene extends Phaser.Scene {
       menuBtn.parentNode.replaceChild(newMenuBtn, menuBtn);
 
       newMenuBtn.addEventListener('click', () => {
-        const gameOverOverlay = document.getElementById('gameover-overlay');
-        if (gameOverOverlay) {
-          gameOverOverlay.classList.add('hidden');
-        }
-      
-        // Ensure menu overlay is in the correct container
-        const fsElement =
-          document.fullscreenElement ||
-          document.webkitFullscreenElement;
-        
-        const container = fsElement || document.getElementById('game-container');
-        const menuOverlay = document.getElementById('menu-overlay');
-        
-        if (menuOverlay && container) {
-          // Only move if not already in the correct container
-          if (menuOverlay.parentNode !== container) {
-            container.appendChild(menuOverlay);
-          }
-          menuOverlay.classList.remove('hidden');
-        }
-      
+        document.getElementById('gameover-overlay')?.classList.add('hidden');
         this.scene.start('MenuScene');
       });
-      
-    }
-
-    const overlay = document.getElementById("gameover-overlay");
-
-    // Ensure overlay is in the correct container (fullscreen or game-container)
-    const fsElement =
-      document.fullscreenElement ||
-      document.webkitFullscreenElement;
-    
-    const container = fsElement || document.getElementById("game-container");
-    
-    if (overlay && container) {
-      // Only move if not already in the correct container
-      if (overlay.parentNode !== container) {
-        container.appendChild(overlay);
-      }
-      overlay.classList.remove("hidden");
     }
   }
 }

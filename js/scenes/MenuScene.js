@@ -4,40 +4,20 @@ class MenuScene extends Phaser.Scene {
   }
 
   create() {
-    // Show menu overlay and ensure it's in the correct container
+    // Show menu overlay
     const menuOverlay = document.getElementById("menu-overlay");
     if (menuOverlay) {
-      // Ensure overlay is in the correct container (fullscreen or game-container)
-      const fsElement =
-        document.fullscreenElement ||
-        document.webkitFullscreenElement;
-      
-      const container = fsElement || document.getElementById("game-container");
-      
-      if (container && menuOverlay.parentNode !== container) {
-        container.appendChild(menuOverlay);
-      }
-      
       menuOverlay.classList.remove("hidden");
     }
 
-    // Hide game over overlay if visible
-    const gameOverOverlay = document.getElementById("gameover-overlay");
-    if (gameOverOverlay) {
-      gameOverOverlay.classList.add("hidden");
-    }
-    
-    // Hide pause overlay if visible
-    const pauseOverlay = document.getElementById("pause-overlay");
-    if (pauseOverlay) {
-      pauseOverlay.classList.add("hidden");
-    }
-    
+    // Hide other overlays
+    document.getElementById("gameover-overlay")?.classList.add("hidden");
+    document.getElementById("pause-overlay")?.classList.add("hidden");
+
     // Hide pause button
     const pauseBtn = document.getElementById("pauseBtn");
     if (pauseBtn) {
       pauseBtn.classList.add("hidden");
-      pauseBtn.style.display = "none";
     }
 
     // Update high score display
@@ -78,7 +58,7 @@ class MenuScene extends Phaser.Scene {
         if (screen.orientation && screen.orientation.lock) {
           try {
             await screen.orientation.lock("landscape");
-          } catch (e) {}
+          } catch (e) { }
         }
 
         // 3️⃣ 🔥 WAIT for orientation + viewport settle

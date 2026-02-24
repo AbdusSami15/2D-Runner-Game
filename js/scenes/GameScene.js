@@ -20,8 +20,8 @@ class GameScene extends Phaser.Scene {
     // HTML refs
     this.jumpBarFill = document.getElementById("jump-bar-fill");
     this.jumpCountEl = document.getElementById("jump-count");
-    
-    
+
+
 
     // Hide all overlays when game starts
     const menuOverlay = document.getElementById("menu-overlay");
@@ -110,13 +110,6 @@ class GameScene extends Phaser.Scene {
     // Setup pause functionality
     this.setupPause();
 
-    // Listen for fullscreen changes to reposition pause button
-    document.addEventListener("fullscreenchange", () => {
-      this.ensurePauseButtonPosition();
-    });
-    document.addEventListener("webkitfullscreenchange", () => {
-      this.ensurePauseButtonPosition();
-    });
 
     this.bgMusic = this.sound.add("bg_music", {
       loop: true,
@@ -238,39 +231,39 @@ class GameScene extends Phaser.Scene {
   }
   onEnemyAvoided() {
     this.enemiesAvoided++;
-  
+
     const progress =
       (this.enemiesAvoided / this.enemiesForDoubleJump) * 100;
-  
+
     // 1️⃣ Always update bar first
     if (this.jumpBarFill) {
       this.jumpBarFill.style.width = `${progress}%`;
     }
-  
+
     // 2️⃣ If bar is full
     if (this.enemiesAvoided >= this.enemiesForDoubleJump) {
-  
+
       // ⏳ Allow browser to render FULL bar
       setTimeout(() => {
         this.enemiesAvoided = 0;
         this.extraJumps++;
-  
+
         // Reset bar
         if (this.jumpBarFill) {
           this.jumpBarFill.style.width = "0%";
         }
-  
+
         // Update badge
         if (this.jumpCountEl) {
           this.jumpCountEl.textContent = `x${this.extraJumps}`;
         }
-  
+
         // Optional feedback
         // this.sound.play("powerup");
       }, 120); // 🔥 100–150ms is perfect
     }
   }
-  
+
 
   // grantDoubleJump() {
   //   this.player.extraJumps = this.player.maxExtraJumps;
@@ -485,22 +478,6 @@ class GameScene extends Phaser.Scene {
     updateCountdown();
   }
 
-  ensurePauseButtonPosition() {
-    // Make sure pause button and overlay are in the correct container (fullscreen or game-container)
-    const fsElement =
-      document.fullscreenElement || document.webkitFullscreenElement;
-
-    const container = fsElement || document.getElementById("game-container");
-
-    if (container) {
-      if (this.pauseBtn && this.pauseBtn.parentNode !== container) {
-        container.appendChild(this.pauseBtn);
-      }
-      if (this.pauseOverlay && this.pauseOverlay.parentNode !== container) {
-        container.appendChild(this.pauseOverlay);
-      }
-    }
-  }
 
   goToMenuFromPause() {
     // Stop background music
@@ -557,7 +534,7 @@ class GameScene extends Phaser.Scene {
       const meters = Math.floor(this.metersRun);
       // Format as 6-digit number with leading zeros (e.g., "001071")
       this.hudScoreEl.textContent = `Distance traveled so far: ${meters}m`;
-}
+    }
     if (this.hudJumpsEl) {
       // Format as 3-digit number with leading zeros (e.g., "000", "001", "010")
       this.hudJumpsEl.textContent = String(this.extraJumps).padStart(3, "0");
@@ -583,7 +560,7 @@ class GameScene extends Phaser.Scene {
     if (this.jumpBarFill) {
       this.jumpBarFill.style.width = "0%";
     }
-  
+
     if (this.jumpCountEl) {
       this.jumpCountEl.textContent = "x0";
     }
@@ -594,18 +571,18 @@ class GameScene extends Phaser.Scene {
 
   consumeDoubleJump() {
     if (this.extraJumps <= 0) return;
-  
+
     this.extraJumps--;
-  
+
     // 🔥 Update badge
     if (this.jumpCountEl) {
       this.jumpCountEl.textContent = `x${this.extraJumps}`;
     }
-  
+
     // 🔥 Optional: slight visual feedback
     // if (this.jumpBarFill) {
     //   this.jumpBarFill.style.width = "0%";
     // }
   }
-  
+
 }
