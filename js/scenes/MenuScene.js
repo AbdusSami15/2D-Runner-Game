@@ -48,54 +48,26 @@ class MenuScene extends Phaser.Scene {
       const newStartBtn = startBtn.cloneNode(true);
       startBtn.parentNode.replaceChild(newStartBtn, startBtn);
 
-      newStartBtn.addEventListener("click", async () => {
-        // 1️⃣ Fullscreen (Skip on iPhone as it's not supported)
+      newStartBtn.addEventListener("click", () => {
+        // 1️⃣ Hide menu overlay immediately for instant feedback
+        const menuOverlay = document.getElementById("menu-overlay");
+        if (menuOverlay) {
+          menuOverlay.classList.add("hidden");
+        }
+
+        // 2️⃣ Fullscreen (Skip on iPhone as it's not supported) - Fire and forget
         const isIPhone = /iPhone/i.test(navigator.userAgent);
         if (!isIPhone && this.scale && !this.scale.isFullscreen) {
-          try {
-            await this.scale.startFullscreen();
-          } catch (e) {
-            console.warn("Fullscreen request failed:", e);
-          }
+          this.scale.startFullscreen().catch(e => console.warn("Fullscreen failed:", e));
         }
 
-        // 2️⃣ Lock landscape (mobile)
+        // 3️⃣ Lock landscape (mobile) - Fire and forget
         if (screen.orientation && screen.orientation.lock) {
-          try {
-            await screen.orientation.lock("landscape");
-          } catch (e) {
-            console.warn("Orientation lock failed:", e);
-          }
+          screen.orientation.lock("landscape").catch(e => console.warn("Orientation lock failed:", e));
         }
 
-        // 3️⃣ 🔥 WAIT for orientation + viewport settle
-        setTimeout(() => {
-          // 4️⃣ Start scene logic
-          let attempts = 0;
-          const maxAttempts = 20; // ~2 seconds total
-
-          const startGameWhenLandscape = () => {
-            attempts++;
-            this.time.delayedCall(50, () => {
-              const isLandscape = window.innerWidth > window.innerHeight;
-
-              // If we are landscape OR we've reached max attempts (failed to lock)
-              if (isLandscape || attempts >= maxAttempts) {
-                // Hide menu overlay before starting
-                const menuOverlay = document.getElementById("menu-overlay");
-                if (menuOverlay) {
-                  menuOverlay.classList.add("hidden");
-                }
-                this.scene.start("GameScene");
-              } else {
-                // Still portrait and haven't timed out → wait
-                setTimeout(startGameWhenLandscape, 100);
-              }
-            });
-          };
-
-          startGameWhenLandscape();
-        }, 300); // 🔥 CRITICAL DELAY
+        // 4️⃣ Start scene IMMEDIATELY
+        this.scene.start("GameScene");
       });
     }
   }

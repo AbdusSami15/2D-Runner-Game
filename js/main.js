@@ -26,7 +26,7 @@ const config = {
     width: DESIGN_WIDTH,
     height: DESIGN_HEIGHT
   },
-  
+
 
   physics: {
     default: "arcade",
@@ -47,15 +47,31 @@ const config = {
 const game = new Phaser.Game(config);
 window.game = game;
 
+function checkOrientation() {
+  const orientationOverlay = document.getElementById("orientation-overlay");
+  if (!orientationOverlay) return;
+
+  if (isMobileDevice() && window.innerHeight > window.innerWidth) {
+    orientationOverlay.classList.remove("hidden");
+  } else {
+    orientationOverlay.classList.add("hidden");
+  }
+}
+
 window.addEventListener('resize', () => {
   game.scale.resize(window.innerWidth, window.innerHeight);
+  checkOrientation();
 });
 
 window.addEventListener('orientationchange', () => {
   setTimeout(() => {
     game.scale.resize(window.innerWidth, window.innerHeight);
+    checkOrientation();
   }, 300);
 });
+
+// Run initial check
+checkOrientation();
 
 
 function isMobileDevice() {

@@ -391,6 +391,39 @@ canvas {
   transition: width 0.3s ease;
 }
 
+/* Orientation Overlay */
+#orientation-overlay {
+  background: var(--ui-glass-strong);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  z-index: 5000;
+}
+
+.rotate-icon {
+  font-size: 64px;
+  margin-bottom: 20px;
+  animation: rotateHint 2s ease-in-out infinite;
+  display: inline-block;
+}
+
+@keyframes rotateHint {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  25% {
+    transform: rotate(90deg);
+  }
+
+  75% {
+    transform: rotate(90deg);
+  }
+
+  100% {
+    transform: rotate(0deg);
+  }
+}
+
 /* Utilities */
 .hidden {
   display: none !important;
