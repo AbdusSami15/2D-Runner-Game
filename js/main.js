@@ -51,7 +51,8 @@ function checkOrientation() {
   const orientationOverlay = document.getElementById("orientation-overlay");
   if (!orientationOverlay) return;
 
-  if (isMobileDevice() && window.innerHeight > window.innerWidth) {
+  // Show if in portrait mode (on mobile or for testing on desktop)
+  if (window.innerHeight > window.innerWidth) {
     orientationOverlay.classList.remove("hidden");
   } else {
     orientationOverlay.classList.add("hidden");
