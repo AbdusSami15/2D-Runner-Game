@@ -49,33 +49,46 @@ class MenuScene extends Phaser.Scene {
       startBtn.parentNode.replaceChild(newStartBtn, startBtn);
 
       newStartBtn.addEventListener("click", async () => {
-        // 1️⃣ Fullscreen
-        if (this.scale && !this.scale.isFullscreen) {
-          await this.scale.startFullscreen();
+        // 1️⃣ Fullscreen (Skip on iPhone as it's not supported)
+        const isIPhone = /iPhone/i.test(navigator.userAgent);
+        if (!isIPhone && this.scale && !this.scale.isFullscreen) {
+          try {
+            await this.scale.startFullscreen();
+          } catch (e) {
+            console.warn("Fullscreen request failed:", e);
+          }
         }
 
         // 2️⃣ Lock landscape (mobile)
         if (screen.orientation && screen.orientation.lock) {
           try {
             await screen.orientation.lock("landscape");
-          } catch (e) { }
+          } catch (e) {
+            console.warn("Orientation lock failed:", e);
+          }
         }
 
         // 3️⃣ 🔥 WAIT for orientation + viewport settle
         setTimeout(() => {
-          const w = window.innerWidth;
-          const h = window.innerHeight;
+          // 4️⃣ Start scene logic
+          let attempts = 0;
+          const maxAttempts = 20; // ~2 seconds total
 
-          // 4️⃣ FORCE Phaser resize
-          // this.scale.resize(w, h);
-
-          // 5️⃣ Restart scene CLEAN (important)
           const startGameWhenLandscape = () => {
+            attempts++;
             this.time.delayedCall(50, () => {
-              if (window.innerWidth > window.innerHeight) {
+              const isLandscape = window.innerWidth > window.innerHeight;
+
+              // If we are landscape OR we've reached max attempts (failed to lock)
+              if (isLandscape || attempts >= maxAttempts) {
+                // Hide menu overlay before starting
+                const menuOverlay = document.getElementById("menu-overlay");
+                if (menuOverlay) {
+                  menuOverlay.classList.add("hidden");
+                }
                 this.scene.start("GameScene");
               } else {
-                // Still portrait → wait
+                // Still portrait and haven't timed out → wait
                 setTimeout(startGameWhenLandscape, 100);
               }
             });
