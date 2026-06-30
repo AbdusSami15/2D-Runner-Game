@@ -49,26 +49,34 @@ class MenuScene extends Phaser.Scene {
       startBtn.parentNode.replaceChild(newStartBtn, startBtn);
 
       newStartBtn.addEventListener("click", () => {
-        // 1️⃣ Hide menu overlay immediately for instant feedback
         const menuOverlay = document.getElementById("menu-overlay");
         if (menuOverlay) {
           menuOverlay.classList.add("hidden");
         }
 
-        // 2️⃣ Fullscreen (mobile only; skip iPhone — not supported)
-        const isIPhone = /iPhone/i.test(navigator.userAgent);
-        const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-        if (isMobile && !isIPhone && this.scale && !this.scale.isFullscreen) {
-          this.scale.startFullscreen()?.catch?.(e => console.warn("Fullscreen failed:", e));
-        }
-
-        // 3️⃣ Lock landscape (mobile only) - Fire and forget
-        if (isMobile && screen.orientation?.lock) {
-          screen.orientation.lock("landscape")?.catch?.(e => console.warn("Orientation lock failed:", e));
-        }
-
-        // 4️⃣ Start scene IMMEDIATELY
+        // Start game first so fullscreen/orientation never block desktop play
         this.scene.start("GameScene");
+
+        try {
+          const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+          const isIPhone = /iPhone/i.test(navigator.userAgent);
+
+          if (isMobile && !isIPhone && this.scale && typeof this.scale.startFullscreen === "function" && !this.scale.isFullscreen) {
+            const fullscreenResult = this.scale.startFullscreen();
+            if (fullscreenResult && typeof fullscreenResult.catch === "function") {
+              fullscreenResult.catch(e => console.warn("Fullscreen failed:", e));
+            }
+          }
+
+          if (isMobile && screen.orientation && typeof screen.orientation.lock === "function") {
+            const lockResult = screen.orientation.lock("landscape");
+            if (lockResult && typeof lockResult.catch === "function") {
+              lockResult.catch(e => console.warn("Orientation lock failed:", e));
+            }
+          }
+        } catch (e) {
+          console.warn("Mobile setup failed:", e);
+        }
       });
     }
   }
