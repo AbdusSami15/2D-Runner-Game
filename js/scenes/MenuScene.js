@@ -55,15 +55,16 @@ class MenuScene extends Phaser.Scene {
           menuOverlay.classList.add("hidden");
         }
 
-        // 2️⃣ Fullscreen (Skip on iPhone as it's not supported) - Fire and forget
+        // 2️⃣ Fullscreen (mobile only; skip iPhone — not supported)
         const isIPhone = /iPhone/i.test(navigator.userAgent);
-        if (!isIPhone && this.scale && !this.scale.isFullscreen) {
-          this.scale.startFullscreen().catch(e => console.warn("Fullscreen failed:", e));
+        const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+        if (isMobile && !isIPhone && this.scale && !this.scale.isFullscreen) {
+          this.scale.startFullscreen()?.catch?.(e => console.warn("Fullscreen failed:", e));
         }
 
-        // 3️⃣ Lock landscape (mobile) - Fire and forget
-        if (screen.orientation && screen.orientation.lock) {
-          screen.orientation.lock("landscape").catch(e => console.warn("Orientation lock failed:", e));
+        // 3️⃣ Lock landscape (mobile only) - Fire and forget
+        if (isMobile && screen.orientation?.lock) {
+          screen.orientation.lock("landscape")?.catch?.(e => console.warn("Orientation lock failed:", e));
         }
 
         // 4️⃣ Start scene IMMEDIATELY
